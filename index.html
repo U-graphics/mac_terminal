@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>mac termnal</title>
+    <link rel="stylesheet" href="./assets/styles/main.css">
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="main" class="relative p-3">
+        <div class="terminal-icon" @dblclick="collapse = false">
+            <div class="text-center inline-block">
+                <img src="./assets/img/Terminalicon2.png" width="54px" alt="">
+                <small class="text-white text-xs">Terminal</small>
+            </div>
+            <!-- <svg height="24" version="1.1" width="24">
+                <g transform="translate(0 -1028.4)">
+                    <path
+                        d="m3 1030.4c-1.1046 0-2 0.9-2 2v7 2 7c0 1.1 0.8954 2 2 2h9 9c1.105 0 2-0.9 2-2v-7-2-7c0-1.1-0.895-2-2-2h-9-9z"
+                        fill="#2c3e50" />
+                    <path d="m3 1049.4c-1.1046 0-2-0.9-2-2v-7-2-3h22v3 2 7c0 1.1-0.895 2-2 2h-9-9z" fill="#34495e" />
+                    <path d="m4 1032.9v1.1l2 2.4-2 2.3v1.1l3-3.4-3-3.5z" fill="#ecf0f1" />
+                    <path d="m3 2c-1.1046 0-2 0.8954-2 2v7 2 3h22v-3-2-7c0-1.1046-0.895-2-2-2h-9-9z" fill="#34495e"
+                        transform="translate(0 1028.4)" />
+                    <path d="m4 5.125v1.125l3 1.75-3 1.75v1.125l5-2.875-5-2.875zm5 4.875v1h5v-1h-5z" fill="#ecf0f1"
+                        transform="translate(0 1028.4)" />
+                </g>
+            </svg> -->
+        </div>
+
+        <transition name="zoomIn">
+            <div v-show="!collapse" :class="{'fullScreen' : full_screen && !collapse }" @mousedown="mousedown"
+                :style="{top: top + 'px', left: left + 'px'}"
+                class="terminal  absolute bg-gray-900 shadow-2xl rounded-lg ouline-none">
+                <div class="menu-bar flex items-center py-1 pl-2 w-full rounded-t-lg bg-gray-300">
+                    <div class="icons border-gray-900 inline-block h-full unselectable-on">
+                        <div @click="collapse = true"
+                            class="exit-icon relative inline-block h-3 w-3 mr-1 bg-red-500 rounded-full cursor-pointer">
+                            <small class="inline-block absolute">&times;</small>
+                        </div>
+                        <div class="hide-icon inline-block h-3 w-3 mr-1 bg-yellow-500 rounded-full cursor-pointer">
+                        </div>
+                        <div @click="full_screen = !full_screen"
+                            class="zoom-icon inline-block h-3 w-3 mr-1 bg-green-500 rounded-full cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+                <div class="content h-full ">
+                    <div class=" px-2 py-1 contet-text text-white overflow-y-auto">
+                        <p class="text-xs">Last Login: Mon May 27 12:20:32 on console </p>
+                        <p class="text-xs class inline-block">bash~3.2$ </p>
+                        <textarea
+                            class="resize-none overflow-auto text-xs outline-none border-none bg-transparent w-full h-full max-h-full"></textarea>
+                    </div>
+                </div>
+            </div>
+        </transition>
+    </div>
+    <script>
+        new Vue({
+            el: "#main",
+            data() {
+                return {
+                    collapse: true,
+                    full_screen: false,
+                    deltaX: 0,
+                    deltaY: 0,
+                    currX: 0,
+                    currY: 0,
+                    top: 400,
+                    left: 400,
+                }
+            },
+            methods: {
+                mousedown(e) {
+                    this.currX = e.clientX;
+                    this.currY = e.clientY;
+                    document.onmousemove = this.mousemove;
+
+                    // unregister onmousemove once mouseup, clean up onmouseup event listener by itself as well;
+                    document.onmouseup = () => {
+                        document.onmouseup = null;
+                        document.onmousemove = null;
+                    }
+                },
+                mousemove(e) {
+                    e.preventDefault();
+                    this.deltaX = e.clientX - this.currX;
+                    this.deltaY = e.clientY - this.currY;
+                    this.currX = e.clientX;
+                    this.currY = e.clientY;
+
+                    this.left += this.deltaX;
+                    this.top += this.deltaY;
+                }
+            }
+
+        })
+
+    </script>
+</body>
+
+</html>
